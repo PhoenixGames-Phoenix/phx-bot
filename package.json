@@ -1,0 +1,23 @@
+{
+  "name": "phx-bot",
+  "version": "1.0.0",
+  "description": "The Discord Bot for the PHX discord server",
+  "main": "./src/index.js",
+  "scripts": {
+    "run": "node ./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PhoenixGames-Phoenix/phx-bot.git"
+  },
+  "keywords": [],
+  "author": "PhoenixGames-Phoenix",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/PhoenixGames-Phoenix/phx-bot/issues"
+  },
+  "homepage": "https://github.com/PhoenixGames-Phoenix/phx-bot#readme",
+  "dependencies": {
+    "discord.js": "^12.3.1"
+  }
+}
