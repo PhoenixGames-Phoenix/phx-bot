@@ -1,5 +1,5 @@
 # phx-bot
-The Discord Bot for the PHX Discord server
+The Discord Bot for the PHX Discord server written in nodejs using discord.js
 
 # Use of the Bot
 The Bot is for my own private use on the PHX discord server and will probably include code that is only useful in my specific usecase.
