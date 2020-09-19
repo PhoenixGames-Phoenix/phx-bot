@@ -1,3 +1,8 @@
 {
-    "prefix": "-"
+    "prefix": "-",
+    "messages": {
+        "commanderror": ":x: Error 500: There was an Error trying to execute this command",
+        "unknwoncommand": ":x: Error 404: Command does not exist!",
+        "embedfooter": "If you think there is an error, please report it at https://github.com/PhoenixGames-Phoenix/phx-bot/issues"
+    }
 }

@@ -20,15 +20,17 @@ client.on('message', msg => {
     if (!msg.content.startsWith(config.prefix) || msg.author.bot) return;
 
     const args = msg.content.slice(config.prefix.length).trim().split(' ');
-    const command = args.shift().toLowerCase();
+    const commandName = args.shift().toLowerCase();
 
-    if (!client.commands.has(command)) return;
+    if (!client.commands.has(commandName)) return msg.reply(config.messages.unknwoncommand);
+
+    const command = client.commands.get(commandName);
 
     try {
-        client.commands.get(command).execute(msg, args);
+        command.execute(msg, args);
     } catch (error) {
         console.error(error);
-        msg.reply(':x: Error 500: There was an Error trying to execute this command');
+        msg.reply(config.messages.commanderror);
     }
 });
 
