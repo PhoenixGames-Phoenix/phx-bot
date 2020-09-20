@@ -17,10 +17,17 @@ module.exports = {
             var infoembed = new discord.MessageEmbed()
                 .setTitle('**Command List**')
                 .setColor('#008672')
-                .addFields(
-                    {name: `**List of all Commands:**`, value: `**${commandmap}**\nIf you want more info about these commands, try ${config.prefix}help <command>`}
-                )
                 .setFooter(config.messages.embedfooter)
+
+            const FieldData = [];
+
+            for (command of commands.map(command => command)) {
+                FieldData.push(`**${command.name}**`);
+                FieldData.push(`Description: ${command.description || "No Description provided!"}`);
+                FieldData.push(`Usage: ${command.usage || "No usage provided!"}`);
+                FieldData.push(`Cooldown: ${command.cooldown || 0 } second(s)`);
+            }
+            infoembed.addField('**Command Info**', `${FieldData.join("\n")}`);
             return await message.channel.send(infoembed);
         } else {
             const name = args[0].toLowerCase();
