@@ -4,6 +4,7 @@ const {config} = require('../config.js');
 module.exports = {
     name: 'reload',
     description: 'Reloads all commands, Bot Owner Only',
+    usage: 'reload \`command\`',
     async execute(message, args) {
         if (message.author.tag != config.botowner.toString()) return await message.channel.send(config.messages.unauthorized);
         if (!args.length) return await message.channel.send(config.messages.notenoughargs);
