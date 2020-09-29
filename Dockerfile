@@ -8,4 +8,4 @@ RUN npm i
 
 COPY . .
 
-CMD [ "node", "./src/" ]
+RUN cd ./src/ && node .

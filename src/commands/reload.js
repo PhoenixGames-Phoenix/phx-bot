@@ -1,5 +1,5 @@
 var discord = require('discord.js');
-const {config} = require('./config.js');
+const {config} = require('../config.js');
 
 module.exports = {
     name: 'reload',
@@ -13,10 +13,10 @@ module.exports = {
 
         if(!command) return await message.channel.send(config.messages.unknwoncommand);
 
-        delete require.cache[require.resolve(`./commands/${command.name}.js`)];
+        delete require.cache[require.resolve(`./${command.name}.js`)];
 
         try {
-            const newCommand = require(`./commands/${command.name}.js`);
+            const newCommand = require(`./${command.name}.js`);
             await message.client.commands.set(newCommand.name, newCommand);
             await message.channel.send(`Successfuly reloaded command ${commandName}`);
         } catch (error) {
