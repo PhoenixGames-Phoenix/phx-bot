@@ -5,7 +5,7 @@ const {config, secrets} = require('./config.js');
 const client = new discord.Client();
 client.commands = new discord.Collection();
 
-const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
+const commandFiles = fs.readdirSync('./src/commands/').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);

@@ -1,7 +1,6 @@
 var discord = require('discord.js');
 var fs = require('fs');
-const {config} = require('../config.js');
-const info = require('./info.js');
+const {config} = require('./config.js');
 
 module.exports = {
     name: 'help',
