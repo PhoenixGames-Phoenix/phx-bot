@@ -1,5 +1,5 @@
 var discord = require('discord.js');
-const {config} = require('../config.js');
+const config = require('../config.js').loadconfig();
 
 module.exports = {
     name: 'reload',

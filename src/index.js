@@ -1,6 +1,6 @@
 const discord = require('discord.js');
 const fs = require('fs');
-const {config, secrets} = require('./config.js');
+const config = require('./config.js');
 
 const client = new discord.Client();
 client.commands = new discord.Collection();
@@ -17,12 +17,12 @@ client.on('ready', () => {
 });
 
 client.on('message', msg => {
-    if (!msg.content.startsWith(config.prefix) || msg.author.bot) return;
+    if (!msg.content.startsWith(config.loadconfig().prefix) || msg.author.bot) return;
 
-    const args = msg.content.slice(config.prefix.length).trim().split(' ');
+    const args = msg.content.slice(config.loadconfig().prefix.length).trim().split(' ');
     const commandName = args.shift().toLowerCase();
 
-    if (!client.commands.has(commandName)) return msg.reply(config.messages.unknwoncommand);
+    if (!client.commands.has(commandName)) return msg.reply(config.loadconfig().messages.unknwoncommand);
 
     const command = client.commands.get(commandName);
 
@@ -30,9 +30,9 @@ client.on('message', msg => {
         command.execute(msg, args);
     } catch (error) {
         console.error(error);
-        msg.reply(config.messages.commanderror);
+        msg.reply(config.loadconfig().messages.commanderror);
     }
 });
 
-client.login(secrets.DiscordToken);
+client.login(config.loadsecrets().DiscordToken);
 
