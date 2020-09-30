@@ -3,7 +3,7 @@ var discord = require('discord.js');
 module.exports = {
     name: 'info',
     description: 'Displays Info about the bot',
-    async execute(message, args) {
+    async execute(message) {
         const response = new discord.MessageEmbed()
             .setColor('#cc9900')
             .setTitle('**Bot Info**')

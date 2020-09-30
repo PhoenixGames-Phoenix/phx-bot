@@ -1,7 +1,5 @@
 var discord = require('discord.js');
-var fs = require('fs');
 const config = require('../config.js').loadconfig();
-const info = require('./info.js');
 
 module.exports = {
     name: 'help',
@@ -21,7 +19,7 @@ module.exports = {
 
             const FieldData = [];
 
-            for (command of commands.map(command => command)) {
+            for (var command of commands.map(command => command)) {
                 FieldData.push(`**${command.name}**`);
                 FieldData.push(`Description: ${command.description || "No Description provided!"}`);
                 FieldData.push(`Usage: ${command.usage || "No usage provided!"}`);
@@ -42,15 +40,15 @@ module.exports = {
                 return await message.channel.send(unknwonembed);
             }
 
-            var infoembed = new discord.MessageEmbed()
+            var replembed = new discord.MessageEmbed()
                 .setTitle(`**Command Info for ${name}**`)
                 .setColor('#008672');
-            if (command.description) infoembed.addField(`**Description**`,`${command.description}`,true);
-            if (command.aliases) infoembed.addField(`**Aliases**`,`${command.aliases.join(', ')}`, true);
-            if (command.usage) infoembed.addField(`**Usage:**`,`${command.usage}`,true);
-            infoembed.addField(`**Cooldown**`,`${command.cooldown || 0 } second(s)`,true);
+            if (command.description) replembed.addField(`**Description**`,`${command.description}`,true);
+            if (command.aliases) replembed.addField(`**Aliases**`,`${command.aliases.join(', ')}`, true);
+            if (command.usage) replembed.addField(`**Usage:**`,`${command.usage}`,true);
+            replembed.addField(`**Cooldown**`,`${command.cooldown || 0 } second(s)`,true);
 
-            return await message.channel.send(infoembed);
+            return await message.channel.send(replembed);
         }
 
     }

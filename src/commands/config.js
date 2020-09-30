@@ -1,4 +1,3 @@
-var discord = require('discord.js');
 var fs = require('fs');
 const config = require('../config.js').loadconfig();
 
