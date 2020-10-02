@@ -4,7 +4,7 @@ const config = require('../config.js').loadconfig();
 module.exports = {
     name: 'help',
     description: 'Gives info about a given command',
-    usage: 'help <command>',
+    usage: 'help [<command>]',
     cooldown: 5,
     async execute(message, args) {
         const commandmap = [];

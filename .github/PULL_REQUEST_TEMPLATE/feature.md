@@ -21,7 +21,7 @@ Description: Command description like the one you write in the module.exports
 Usage: Usage of the command written down like:
 
 ```text
-command `required argument` <optional argument>
+command <required argument> [<optional argument>] {option1 || option2}
 ```
 
 Aliases: Write down all the aliases like: command, alias1, alias2
