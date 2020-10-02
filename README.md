@@ -1,7 +1,10 @@
 # phx-bot
 
 The Discord Bot for the PHX Discord server written in nodejs using discord.js
+
 [![CodeFactor](https://www.codefactor.io/repository/github/phoenixgames-phoenix/phx-bot/badge/master)](https://www.codefactor.io/repository/github/phoenixgames-phoenix/phx-bot/overview/master)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/PhoenixGames-Phoenix/phx-bot/ESLint%20CI?label=ESLint&style=for-the-badge)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/PhoenixGames-Phoenix/phx-bot/Docker%20Image%20CI?label=Docker%20Build&style=for-the-badge)
 
 ## Use of the Bot
 
