@@ -7,5 +7,17 @@
     "notenoughargs": ":x: Error 400: Not enough arguments!",
     "embedfooter": "If you think there is an error, please report it at https://github.com/PhoenixGames-Phoenix/phx-bot/issues"
   },
-  "botowner": "Phoenix#8577"
+  "botowner": "Phoenix#8577",
+  "rank_links": {
+    "REGULAR": 713133844500316201,
+    "VIP": 713133843753861161,
+    "VIP_PLUS": 713133842998755430,
+    "MVP": 713133842826788955,
+    "MVP_PLUS": 713133842357157908,
+    "MVP_PLUS_PLUS": 713133841988059136,
+    "YOUTUBE": 762062235077050401,
+    "HELPER": 713133841535074304,
+    "MODERATOR": 713133841061249044,
+    "ADMIN": 713133840641687592
+  }
 }
