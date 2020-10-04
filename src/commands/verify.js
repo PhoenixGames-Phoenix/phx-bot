@@ -32,8 +32,11 @@ module.exports = {
             let role_id = config.rank_links[rank];
             const role = message.guild.roles.cache.find(obj => obj.id == role_id);
             const roles = message.member.roles;
-            if(roles.cache.has(role_id)) return await message.channel.send(`You're already verified and there have been no rank changes!`);
-            if(!roles.cache.has(role_id)) {
+            if(roles.cache.some(rle => rle.id == role_id)){
+                await message.reactions.removeAll();
+                return await message.channel.send(`You're already verified and there have been no rank changes`);
+            } 
+            if(!roles.cache.some(rle => rle.id == role_id)) {
                 await message.member.roles.add(role, 'Player verification');
                 await message.reactions.removeAll();
                 await message.react('✅');
