@@ -10,6 +10,7 @@ module.exports = {
     usage: 'verify <Username>',
     async execute(message, args) {
         if (!args[0]) return await message.channel.send(config.messages.notenoughargs);
+        await message.react("⌛");
         try {
             let player = await APIclient.getPlayer('name',args[0]);
             
@@ -31,14 +32,17 @@ module.exports = {
             let role_id = config.rank_links[rank];
             const role = message.guild.roles.cache.find(obj => obj.id == role_id);
             const roles = message.member.roles;
-            if(roles.cache.has(role)) return await message.channel.send(`You're already verified and there have been no rank changes!`);
-            if(!roles.cache.has(role)) {
+            if(roles.cache.has(role_id)) return await message.channel.send(`You're already verified and there have been no rank changes!`);
+            if(!roles.cache.has(role_id)) {
                 await message.member.roles.add(role, 'Player verification');
+                await message.reactions.removeAll();
+                await message.react('✅');
                 return await message.channel.send("You've been successfully verified!")
             }
 
         } catch (error) {
-            console.log(error);
+            await message.reactions.removeAll();
+            await message.react('❌');
             return await message.channel.send(`:x: Error 404: Player '${args[0]}' not found!`);
         }
     } 
