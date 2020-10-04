@@ -13,7 +13,8 @@ for (const file of commandFiles) {
 }
 
 client.on('ready', () => {
-    console.log(`${client.user.tag}`)
+    console.log(`${client.user.tag}`);
+    client.user.setActivity('https://github.com/PhoenixGames-Phoenix/phx-bot', { type: 'WATCHING' });
 });
 
 client.on('message', msg => {
