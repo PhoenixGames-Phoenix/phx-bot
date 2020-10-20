@@ -1,4 +1,4 @@
-name: ESLint CI
+name: Prettier CI
 
 on:
   push:
@@ -6,11 +6,9 @@ on:
   pull_request:
     branches: [master]
 jobs:
-  lint:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Install modules
-        run: npm i
-      - name: Run ESLint
-        run: npx eslint ./src/ --ext .js
+      - name: Check prettier code style
+        run: npx prettier --config ./.prettierrc.yaml -c ./src/

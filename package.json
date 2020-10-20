@@ -5,6 +5,8 @@
   "main": "./src/index.js",
   "scripts": {
     "run": "node ./src/index.js",
+    "lint": "npx eslint ./src/",
+    "prettier": "npx prettier --config ./.prettierrc.yaml -w ./src/",
     "dockerbuild": "docker build -t phx-bot:dev . --file Dockerfile"
   },
   "repository": {
@@ -23,6 +25,7 @@
     "hypixel-api": "^1.2.0"
   },
   "devDependencies": {
-    "eslint": "^7.10.0"
+    "eslint": "^7.10.0",
+    "prettier": "2.1.2"
   }
 }
