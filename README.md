@@ -24,8 +24,8 @@ Note: I will NOT host this bot, as i don't plan to add premium features that cou
 
 Make sure you have following tools installed:
 
-nodejs v12.18.3
-Docker 19.03.13 (optional)
+- nodejs 12.19.0 (Pretty much everything between lts and 15, as node 15 changes npm alot)
+- Docker 19.03.13 (optional)
 
 ### Cloning
 
