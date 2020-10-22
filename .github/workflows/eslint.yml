@@ -16,7 +16,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v1
         with:
-          node_version: ${{matrix.node}}
+          node-version: ${{matrix.node}}
       - name: Install modules
         run: npm i
       - name: Run ESLint
