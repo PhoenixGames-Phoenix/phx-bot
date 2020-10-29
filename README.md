@@ -16,7 +16,7 @@ Note: I will NOT host this bot, as i don't plan to add premium features that cou
 
 - If you want a new Feature implemented, but don't know how, try opening a Issue, adding [REQUEST] in the title and adding the request and feature labels
 - If you want to add a new feature, add [FEATURE] in the title of the Pull Request and add the feature label
-- ***IMPORTANT: IF YOU FIND SOMETHING CRITICAL, LIKE A LEAKED API KEY, PLEASE DONT OPEN AN ISSUE! TRY TO CONTACT ME PRIVATE!***
+- **_IMPORTANT: IF YOU FIND SOMETHING CRITICAL, LIKE A LEAKED API KEY, PLEASE DONT OPEN AN ISSUE! TRY TO CONTACT ME PRIVATE!_**
 
 ## Installing & Developing
 
@@ -24,7 +24,7 @@ Note: I will NOT host this bot, as i don't plan to add premium features that cou
 
 Make sure you have following tools installed:
 
-- nodejs 12.19.0 (Pretty much everything between lts and 15, as node 15 changes npm alot)
+- nodejs 14.15.0 (Pretty much everything between lts and 15, as node 15 changes npm alot)
 - Docker 19.03.13 (optional)
 
 ### Cloning
@@ -51,8 +51,8 @@ for the secrets, you will have to create a secrets.json file with this template:
 
 ```json
 {
-    "DiscordToken": "yourdiscordbottokenhere",
-    "HypixelToken": "your-hypixel-api-token-here"
+	"DiscordToken": "yourdiscordbottokenhere",
+	"HypixelToken": "your-hypixel-api-token-here"
 }
 ```
 
