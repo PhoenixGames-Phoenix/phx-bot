@@ -12,12 +12,6 @@ The Discord Bot for the PHX Discord server written in nodejs using discord.js
 I've originally made the bot for private usage on my discord server, but i thought the features i wrote and will write could be useful for the public too.
 Note: I will NOT host this bot, as i don't plan to add premium features that could pay the server cost.
 
-## Read before contributing
-
-- If you want a new Feature implemented, but don't know how, try opening a Issue, adding [REQUEST] in the title and adding the request and feature labels
-- If you want to add a new feature, add [FEATURE] in the title of the Pull Request and add the feature label
-- **_IMPORTANT: IF YOU FIND SOMETHING CRITICAL, LIKE A LEAKED API KEY, PLEASE DONT OPEN AN ISSUE! TRY TO CONTACT ME PRIVATE!_**
-
 ## Installing & Developing
 
 ### Tools
@@ -25,6 +19,7 @@ Note: I will NOT host this bot, as i don't plan to add premium features that cou
 Make sure you have following tools installed:
 
 - nodejs 14.15.0 (Pretty much everything between lts and 15, as node 15 changes npm alot)
+- MongoDB 4.4.1
 - Docker 19.03.13 (optional)
 
 ### Cloning
@@ -45,18 +40,30 @@ gh repo clone PhoenixGames-Phoenix/phx-bot
 
 After you've cloned the repository, you have to edit the config
 
-in the config.json, you will already have a template cloned, just make sure to change the bot owner to your own username + tag
+in the config.json, you will already have a template cloned, just make sure to change everything.
 
 for the secrets, you will have to create a secrets.json file with this template:
 
 ```json
 {
-	"DiscordToken": "yourdiscordbottokenhere",
-	"HypixelToken": "your-hypixel-api-token-here"
+  "DiscordToken": "yourdiscordbottokenhere",
+  "HypixelToken": "your-hypixel-api-token-here",
+  "MongoPassword": "ThisIsNotASecurePassword",
+  "hooks": {
+    "log": "ThisIsTheKeyFromTheURLThatShouldBeVeryLong"
+  }
 }
 ```
 
 The Hypixel Token currently isn't required, but will be for every future hypixel feature
+
+### MongoDB config
+
+Here are the things you need to configure to run this bot without changing anything:
+
+- Create a db called 'discord'
+- Within this db, create a collection called punishments
+- Your MongoDB Server will need to run with authentication enabled, with a user on the 'discord' db with dbAdmin
 
 ### Installation
 
@@ -66,7 +73,10 @@ To install all required Dependencies just run
 npm i
 ```
 
-in the base directory. All dependencies should be installed now. (Let me know if there are any missing, i could have some installed globally)
+in the base directory. All dependencies should be installed now.
+
+**IMPORTANT**
+This does NOT install MongoDB, you'll still have to install and configure mongoDB as mentioned in #6
 
 ### Running and building
 
