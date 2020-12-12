@@ -4,6 +4,7 @@ const config = require('./utils/config.js');
 const tempmute = require('./models/tempmute.js');
 const log = require('./utils/log');
 const ms = require('ms');
+const tempban = require('./models/tempban.js');
 
 const client = new discord.Client();
 client.commands = new discord.Collection();
@@ -25,7 +26,7 @@ client.on('ready', async () => {
             type: 'WATCHING',
         }
     );
-    const timers = [];
+    const mutetimers = [];
     var i = 0;
     for await (const doc of tempmute.find({ punishmenttype: 'tempmute' })) {
         const docject = doc.toObject();
@@ -38,57 +39,48 @@ client.on('ready', async () => {
         );
         const moderator = guild.members.cache.get(docject.moderator);
         if (docject.duration.endTime > Date.now()) {
-            timers[i] = setTimeout(
-                async function (member, role, docject, moderator) {
-                    await member.roles.remove(role);
-                    const unbanembed = new discord.MessageEmbed()
-                        .setTitle(`${member}'s tempmute expired!`)
-                        .setDescription(
-                            `${member}'s tempmute expired after ${ms(
-                                Date.now() - docject.duration.startTime
-                            )}`
-                        )
-                        .addFields(
-                            {
-                                name: 'Offender: ',
-                                value: member.tag,
-                                inline: true,
-                            },
-                            {
-                                name: 'Moderator: ',
-                                value: moderator.tag,
-                                inline: true,
-                            },
-                            {
-                                name: 'Reason: ',
-                                value: docject.reason,
-                                inline: true,
-                            },
-                            {
-                                name: 'Duration: ',
-                                value: ms(
-                                    docject.duration.endTime -
-                                        docject.duration.startTime
-                                ),
-                            }
-                        );
-                    await log(unbanembed);
-                    await tempmute.deleteOne({
-                        punishmenttype: 'tempmute',
-                        offender: member.id,
-                    });
-                }.bind(
-                    [member, role, docject, moderator],
-                    member,
-                    role,
-                    docject,
-                    moderator
-                ),
-                docject.duration.endTime - Date.now()
-            );
+            mutetimers[i] = setTimeout(async function () {
+                await member.roles.remove(role);
+                const unmuteembed = new discord.MessageEmbed()
+                    .setTitle(`${member}'s tempmute expired!`)
+                    .setDescription(
+                        `${member}'s tempmute expired after ${ms(
+                            Date.now() - docject.duration.startTime
+                        )}`
+                    )
+                    .addFields(
+                        {
+                            name: 'Offender: ',
+                            value: member.user.tag,
+                            inline: true,
+                        },
+                        {
+                            name: 'Moderator: ',
+                            value: moderator.user.tag,
+                            inline: true,
+                        },
+                        {
+                            name: 'Reason: ',
+                            value: docject.reason,
+                            inline: true,
+                        },
+                        {
+                            name: 'Duration: ',
+                            value: ms(
+                                docject.duration.endTime -
+                                    docject.duration.startTime
+                            ),
+                        }
+                    );
+                await log(unmuteembed);
+                await tempmute.deleteOne({
+                    punishmenttype: 'tempmute',
+                    offender: member.id,
+                });
+            }, docject.duration.endTime - Date.now());
             i++;
         } else {
-            const unbanembed = new discord.MessageEmbed()
+            const unmutembed = new discord.MessageEmbed()
                 .setTitle(`${member}'s tempmute expired!`)
                 .setDescription(
                     `${member}'s tempmute expired after ${ms(
@@ -98,12 +90,12 @@ client.on('ready', async () => {
                 .addFields(
                     {
                         name: 'Offender: ',
-                        value: member.tag,
+                        value: member.user.tag,
                         inline: true,
                     },
                     {
                         name: 'Moderator: ',
-                        value: moderator.tag,
+                        value: moderator.user.tag,
                         inline: true,
                     },
                     {
@@ -119,7 +111,7 @@ client.on('ready', async () => {
                         ),
                     }
                 );
-            await log(unbanembed);
+            await log(unmutembed);
             await tempmute.deleteOne({
                 punishmenttype: 'tempmute',
                 offender: member.id,
@@ -127,6 +119,98 @@ client.on('ready', async () => {
             await member.roles.remove(role);
         }
     }
+    i = 0;
+    const bantimers = [];
+    for await (const doc of tempban.find({ punishmenttype: 'tempban' })) {
+        const docject = doc.toObject();
+        const guild = client.guilds.cache.get(
+            await config.loadconfig().GuildID
+        );
+        const user = client.users.cache.get(docject.offender);
+        const moderator = client.users.cache.get(docject.moderator);
+        if (docject.duration.endTime > Date.now()) {
+            bantimers[i] = setTimeout(async function () {
+                await tempban.deleteOne({
+                    punishmenttype: 'tempban',
+                    offender: user.id,
+                });
+                await guild.members.unban(docject.offender, 'Tempban expired!');
+                const unbanembed = new discord.MessageEmbed()
+                    .setTitle(`${user.tag}'s tempban expired`)
+                    .setDescription(
+                        `${user.tag}'s tempban expired after ${ms(
+                            Date.now() - docject.duration.startTime
+                        )}`
+                    )
+                    .addFields(
+                        {
+                            name: 'Offender: ',
+                            value: user.tag,
+                            inline: true,
+                        },
+                        {
+                            name: 'Moderator: ',
+                            value: moderator.tag,
+                            inline: true,
+                        },
+                        {
+                            name: 'Reason: ',
+                            value: docject.reason,
+                            inline: true,
+                        },
+                        {
+                            name: 'Duration:',
+                            value: ms(
+                                docject.duration.endTime -
+                                    docject.duration.startTime
+                            ),
+                        }
+                    );
+                await log(unbanembed);
+            }, docject.duration.endTime - Date.now());
+            i++;
+        } else {
+            await tempban.deleteOne({
+                punishmenttype: 'tempban',
+                offender: user.id,
+            });
+            await guild.members.unban(docject.offender, 'Tempban expired!');
+            const unbanembed = new discord.MessageEmbed()
+                .setTitle(`${user.tag}'s tempban expired`)
+                .setDescription(
+                    `${user.tag}'s tempban expired after ${ms(
+                        Date.now() - docject.duration.startTime
+                    )}`
+                )
+                .addFields(
+                    {
+                        name: 'Offender: ',
+                        value: user.tag,
+                        inline: true,
+                    },
+                    {
+                        name: 'Moderator: ',
+                        value: moderator.tag,
+                        inline: true,
+                    },
+                    {
+                        name: 'Reason: ',
+                        value: docject.reason,
+                        inline: true,
+                    },
+                    {
+                        name: 'Duration:',
+                        value: ms(
+                            docject.duration.endTime -
+                                docject.duration.startTime
+                        ),
+                    }
+                );
+            await log(unbanembed);
+        }
+    }
+    module.exports.mutetimers = mutetimers;
+    module.exports.bantimers = bantimers;
 });
 
 client.on('message', (msg) => {

@@ -1,13 +1,13 @@
-const config = require('../utils/config');
 const ms = require('ms');
-const tempmute = require('../models/tempmute');
-const { MessageEmbed } = require('discord.js');
+const config = require('../utils/config');
+const tempban = require('../models/tempban');
 const log = require('../utils/log');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
-    name: 'tempmute',
-    description: 'Temporarily ',
-    usage: 'tempmute <member> <time> <reason>',
+    name: 'tempban',
+    description: 'Temporarily bans a user',
+    usage: 'tempban <user> <time> <reason>',
     async execute(message, args) {
         if (!message.member.hasPermission('BAN_MEMBERS'))
             return await message.channel.send(
@@ -19,44 +19,42 @@ module.exports = {
             );
         if (Number(args[1]) || !ms(args[1]))
             return await message.channel.send(
-                `:x: Error 405: Invalid time format!`
+                `:x: Error 405: Invalid Time Format`
             );
         var time = ms(args[1]);
         if (time < 0)
             return await message.channel.send(
-                `:x: Error 425: Cannot mute for a negative amount of time!`
+                `:x: Error 425: Cannot ban for a negative amount of time!`
             );
-        if (!message.mentions.members.first())
+        if (!message.mentions.users.first())
             return await message.channel.send(
                 `:x: Error 404: User does not exist!`
             );
-        let muteend = Date.now() + time;
-
-        let role = await message.guild.roles.cache.find(
-            (role) => role.id == config.loadconfig().roles.MUTED
-        );
+        let banend = Date.now() - time;
         let member = await message.mentions.members.first();
+        let user = await message.mentions.users.first();
+        let guild = await message.guild;
 
-        await member.roles.add(role);
+        await member.ban({ reason: args[2] });
 
-        await new tempmute({
-            punishmenttype: 'tempmute',
-            offender: member.id,
+        await new tempban({
+            punishmenttype: 'tempban',
+            offender: user.id,
             moderator: message.author.id,
             reason: args[2],
             duration: {
                 startTime: Date.now(),
-                endTime: muteend,
+                endTime: banend,
             },
         }).save();
 
         const oldtime = Date.now();
         setTimeout(async function () {
-            await tempmute.deleteOne({
-                punishmenttype: 'tempmute',
-                offender: member.id,
+            await tempban.deleteOne({
+                punishmenttype: 'tempban',
+                offender: user.id,
             });
-            await member.roles.remove(role);
+            await guild.members.unban(member.id, 'Tempban expired');
             const unbanembed = new MessageEmbed()
                 .setTitle(`${member}'s tempban expired!`)
                 .setDescription(
@@ -67,7 +65,7 @@ module.exports = {
                 .addFields(
                     {
                         name: 'Offender: ',
-                        value: member.user.tag,
+                        value: member.tag,
                         inline: true,
                     },
                     {
@@ -86,9 +84,9 @@ module.exports = {
                     }
                 );
             await log(unbanembed);
-        }, time);
+        });
         await message.channel.send(
-            `:white_check_mark: Succesfully muted ${member.user.tag} for ${args[1]}`
+            `:white_check_mark: Succesfully banned ${user.tag} for ${args[1]}`
         );
     },
 };
