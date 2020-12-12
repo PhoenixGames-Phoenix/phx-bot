@@ -31,10 +31,9 @@ module.exports = {
                 ':x: Error 405: User is not muted!'
             );
         } else {
-            await permmute.updateOne(
-                { offender: message.mentions.members.first(), active: true },
-                { active: false }
-            );
+            await permmute.deleteOne({
+                offender: message.mentions.members.first().id,
+            });
             await message.member.roles.remove(
                 message.guild.roles.cache.find(
                     (role) => role.id == config.loadconfig().roles.MUTED

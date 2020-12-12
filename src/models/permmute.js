@@ -1,12 +1,11 @@
 const conn = require('../utils/dbConnection');
-const { Schema } = require('mongoose');
+const mongoose = require('mongoose');
 
-const permmuteSchema = new Schema({
-    type: { type: String },
-    offender: Number,
-    moderator: Number,
+const permmuteSchema = new mongoose.Schema({
+    punishmenttype: String,
+    offender: String,
+    moderator: String,
     reason: String,
-    active: Boolean,
 });
 
 module.exports = conn.model('mute', permmuteSchema, 'punishments');

@@ -28,7 +28,6 @@ module.exports = {
             offender: member.id,
             moderator: message.author.id,
             reason: args[1],
-            active: true,
         }).save();
 
         let role = await message.guild.roles.cache.find(
