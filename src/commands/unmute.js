@@ -2,6 +2,8 @@ const config = require('../utils/config');
 const permmute = require('../models/permmute');
 const log = require('../utils/log');
 const { MessageEmbed } = require('discord.js');
+const tempmute = require('../models/tempmute');
+const index = require('../index');
 
 module.exports = {
     name: 'unmute',
@@ -22,20 +24,38 @@ module.exports = {
                 ':x: Error 400: You need to mention a user!'
             );
         if (
-            !(await permmute.exists({
-                offender: message.mentions.members.first(),
-                active: true,
-            }))
+            !message.mentions.members
+                .first()
+                .roles.cache.some(
+                    (role) => role.id == config.loadconfig().roles.MUTED
+                )
         ) {
             return await message.channel.send(
                 ':x: Error 405: User is not muted!'
             );
         } else {
-            await permmute.updateOne(
-                { offender: message.mentions.members.first(), active: true },
-                { active: false }
-            );
-            await message.member.roles.remove(
+            if (
+                await permmute.exists({
+                    offender: message.mentions.members.first().id,
+                    punishmenttype: 'mute',
+                })
+            ) {
+                await permmute.deleteOne({
+                    offender: message.mentions.members.first().id,
+                });
+            } else {
+                index.mutetimers.forEach((timer) => {
+                    if (
+                        timer.member.id == message.mentions.members.first().id
+                    ) {
+                        clearTimeout(timer.timeout);
+                    }
+                });
+                await tempmute.deleteOne({
+                    offender: message.mentions.members.first().id,
+                });
+            }
+            await message.mentions.members.first().roles.remove(
                 message.guild.roles.cache.find(
                     (role) => role.id == config.loadconfig().roles.MUTED
                 ),

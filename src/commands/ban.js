@@ -24,11 +24,10 @@ module.exports = {
         const member = message.mentions.members.first();
 
         await new permban({
-            type: 'ban',
+            punishmenttype: 'ban',
             offender: member.id,
             moderator: message.author.id,
             reason: args[1],
-            active: true,
         }).save();
 
         await member.ban({ reason: args[1] });

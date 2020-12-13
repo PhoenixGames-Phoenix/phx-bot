@@ -1,10 +1,10 @@
 const conn = require('../utils/dbConnection');
-const { Schema } = require('mongoose');
+const mongoose = require('mongoose');
 
-const tempbanSchema = new Schema({
-    type: { type: String },
-    offender: Number,
-    moderator: Number,
+const tempbanSchema = new mongoose.Schema({
+    punishmenttype: String,
+    offender: String,
+    moderator: String,
     reason: String,
     duration: {
         type: Object,
