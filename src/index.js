@@ -26,7 +26,7 @@ client.on('ready', async () => {
             type: 'WATCHING',
         }
     );
-    const mutetimers = [];
+    const mutetimers = [{ member: '', timeout: '' }];
     var i = 0;
     for await (const doc of tempmute.find({ punishmenttype: 'tempmute' })) {
         const docject = doc.toObject();
@@ -39,7 +39,8 @@ client.on('ready', async () => {
         );
         const moderator = guild.members.cache.get(docject.moderator);
         if (docject.duration.endTime > Date.now()) {
-            mutetimers[i] = setTimeout(async function () {
+            mutetimers[i].member = member;
+            mutetimers[i].timeout = setTimeout(async function () {
                 await member.roles.remove(role);
                 const unmuteembed = new discord.MessageEmbed()
                     .setTitle(`${member}'s tempmute expired!`)
@@ -120,16 +121,17 @@ client.on('ready', async () => {
         }
     }
     i = 0;
-    const bantimers = [];
+    const bantimers = [{ user: '', timeout: '' }];
     for await (const doc of tempban.find({ punishmenttype: 'tempban' })) {
         const docject = doc.toObject();
         const guild = client.guilds.cache.get(
             await config.loadconfig().GuildID
         );
-        const user = client.users.cache.get(docject.offender);
+        const user = client.users.fetch(docject.offender);
         const moderator = client.users.cache.get(docject.moderator);
         if (docject.duration.endTime > Date.now()) {
-            bantimers[i] = setTimeout(async function () {
+            bantimers[i].user = user;
+            bantimers[i].timeout = setTimeout(async function () {
                 await tempban.deleteOne({
                     punishmenttype: 'tempban',
                     offender: user.id,

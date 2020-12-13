@@ -1,7 +1,9 @@
 const { MessageEmbed } = require('discord.js');
+const index = require('../index');
 const log = require('../utils/log');
 const permban = require('../models/permban');
 const config = require('../utils/config');
+const tempban = require('../models/tempban');
 module.exports = {
     name: 'unban',
     description: 'Reverses a permanent ban',
@@ -19,16 +21,38 @@ module.exports = {
             return await message.channel.send(
                 `:x: Error 405: Not a valid User ID!`
             );
+        if (!message.client.users.fetch(args[0]))
+            return await message.channel.send(
+                `:x: Error 404: User does not exist!`
+            );
         if (
-            !(await permban.exists({
-                offender: args[0],
-                active: true,
-            }))
+            !(await (await message.guild.fetchBans()).find(
+                (user) => user.id == message.client.users.fetch(args[0]).id
+            ))
         )
             return await message.channel.send(
                 `:x: Error 405: User is not banned`
             );
-        await permban.deleteOne({ offender: args[0] });
+        if (
+            await permban.exists({
+                offender: args[0],
+                punishmenttype: 'ban',
+            })
+        ) {
+            await permban.deleteOne({
+                offender: args[0],
+                punishmenttype: 'ban',
+            });
+        } else {
+            index.bantimers.forEach((timer) => {
+                if (timer.user.id == args[0]) {
+                    clearTimeout(timer.timeout);
+                }
+            });
+            await tempban.deleteOne({
+                offender: args[0],
+            });
+        }
         await message.guild.members.unban(args[0], args[1]);
 
         const logembed = new MessageEmbed()
@@ -54,5 +78,9 @@ module.exports = {
             .setColor('#D0021B');
 
         await log(logembed);
+
+        await message.channel.send(
+            `:white_check_mark: Succesfully unbanned ${args[0]}!`
+        );
     },
 };

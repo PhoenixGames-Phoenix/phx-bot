@@ -50,6 +50,33 @@ module.exports = {
             },
         }).save();
 
+        const logembed = new MessageEmbed()
+            .setTitle(`${member} got tempmuted!`)
+            .setDescription(`${member} got tempmuted for ${args[1]}`)
+            .addFields(
+                {
+                    name: 'Offender: ',
+                    value: member.tag,
+                    inline: true,
+                },
+                {
+                    name: 'Moderator: ',
+                    value: message.author.tag,
+                    inline: true,
+                },
+                {
+                    name: 'Reason: ',
+                    value: args[2],
+                    inline: true,
+                },
+                {
+                    name: 'Duration: ',
+                    value: args[1],
+                }
+            );
+
+        await log(logembed);
+
         const oldtime = Date.now();
         setTimeout(async function () {
             await tempmute.deleteOne({
@@ -58,9 +85,9 @@ module.exports = {
             });
             await member.roles.remove(role);
             const unbanembed = new MessageEmbed()
-                .setTitle(`${member}'s tempban expired!`)
+                .setTitle(`${member}'s tempmute expired!`)
                 .setDescription(
-                    `${member}'s tempban expired after ${ms(
+                    `${member}'s tempmute expired after ${ms(
                         Date.now() - oldtime
                     )}`
                 )

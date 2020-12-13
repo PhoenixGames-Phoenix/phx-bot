@@ -26,11 +26,12 @@ module.exports = {
             return await message.channel.send(
                 `:x: Error 425: Cannot ban for a negative amount of time!`
             );
-        if (!message.mentions.users.first())
+        if (!message.mentions.members.first())
             return await message.channel.send(
                 `:x: Error 404: User does not exist!`
             );
-        let banend = Date.now() - time;
+        // We don't check if the user is banned because he has to be mentioned to be banned
+        let banend = Date.now() + time;
         let member = await message.mentions.members.first();
         let user = await message.mentions.users.first();
         let guild = await message.guild;
@@ -47,6 +48,33 @@ module.exports = {
                 endTime: banend,
             },
         }).save();
+
+        const logembed = new MessageEmbed()
+            .setTitle(`${member} got tempbanned!`)
+            .setDescription(`${member} got tempbanned for ${args[1]}`)
+            .addFields(
+                {
+                    name: 'Offender: ',
+                    value: member.tag,
+                    inline: true,
+                },
+                {
+                    name: 'Moderator: ',
+                    value: message.author.tag,
+                    inline: true,
+                },
+                {
+                    name: 'Reason: ',
+                    value: args[2],
+                    inline: true,
+                },
+                {
+                    name: 'Duration: ',
+                    value: args[1],
+                }
+            );
+
+        await log(logembed);
 
         const oldtime = Date.now();
         setTimeout(async function () {
@@ -80,11 +108,11 @@ module.exports = {
                     },
                     {
                         name: 'Duration: ',
-                        value: ms(Date.now() - oldtime),
+                        value: ms(oldtime - Date.now()),
                     }
                 );
             await log(unbanembed);
-        });
+        }, time);
         await message.channel.send(
             `:white_check_mark: Succesfully banned ${user.tag} for ${args[1]}`
         );
