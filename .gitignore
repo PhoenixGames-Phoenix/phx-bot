@@ -1,6 +1,9 @@
 # Secrets
 config/secrets.json
 
+#nvmrc
+.nvmrc
+
 #vscode
 .vscode
 
